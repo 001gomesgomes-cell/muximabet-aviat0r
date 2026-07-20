@@ -1,0 +1,60 @@
+/* Identidade visual Muxima Bet
+   Paleta: dourado #F5C000 · preto #0D0D0D · grafite #1A1A1A · vermelho #E60303 · branco #FFFFFF
+   Tipografia: Montserrat */
+
+:root {
+  --background: 0 0% 5%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 8%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 47 100% 48%;
+  --primary-foreground: 0 0% 5%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14%;
+  --muted-foreground: 0 0% 64%;
+  --accent: 0 97% 46%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 97% 46%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
+  --ring: 47 100% 48%;
+  --game-red: 0 97% 46%;
+  --game-blue: 47 100% 48%;
+  --game-purple: 47 100% 48%;
+  --game-pink: 0 97% 46%;
+  --game-orange: 47 100% 48%;
+  --game-yellow: 47 100% 48%;
+  --game-dark: 0 0% 7%;
+  --game-darker: 0 0% 4%;
+  --gradient-space: linear-gradient(180deg, hsl(0 0% 8%) 0%, hsl(0 0% 4%) 50%, hsl(45 45% 7%) 100%);
+  --gradient-fire: linear-gradient(to bottom, hsl(47 100% 55%), hsl(0 97% 46%), hsl(0 70% 25%), transparent);
+}
+
+body {
+  font-family: Montserrat, Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* Botões e destaques que eram cor-de-rosa passam a vermelho da marca */
+.from-pink-500 {
+  --tw-gradient-from: #E60303 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(230 3 3 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+.via-pink-500 {
+  --tw-gradient-to: rgb(230 3 3 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #E60303 var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+.to-pink-600 {
+  --tw-gradient-to: #B80202 var(--tw-gradient-to-position);
+}
+.text-pink-400 { color: #F5C000; }
+.text-pink-500 { color: #E60303; }
+
+/* Fundos azul-escuros fixos passam aos pretos da marca */
+.bg-\[\#0a0b12\] { background-color: #0D0D0D; }
+.bg-\[\#101326\] { background-color: #1A1A1A; }
+.bg-\[\#05060a\] { background-color: #0D0D0D; }
