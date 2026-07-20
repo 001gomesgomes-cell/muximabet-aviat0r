@@ -7,23 +7,23 @@ saldo (valor + bónus) é creditado automaticamente no perfil do lead no Supabas
 
 ## URL do webhook (colocar nos produtos da Kintu)
 
+Projecto Supabase: **kypohaagiozofdoadvgu** (kibisno.ao@gmail.com)
+
 ```
-https://<PROJECT_REF>.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e
+https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e
 ```
 
-`<PROJECT_REF>` é o ref do projecto Supabase da Muxima Bet (definido no deploy).
+### Recomendado — uma URL por produto (força o pacote e o bónus)
 
-### Opcional — forçar o pacote por produto
+Cola a URL correspondente no campo de webhook/notificação de cada produto na Kintu.
+Assim o crédito é sempre exacto mesmo que a Kintu não envie o ID do produto:
 
-Se a Kintu não enviar o ID do produto no payload, acrescenta o valor na própria URL
-de cada produto:
-
-| Produto (Kintu)                          | URL do webhook a configurar                          |
-|------------------------------------------|------------------------------------------------------|
-| 3.000 Kz (`9b161c75…`)                    | `…/kintu-webhook?secret=…&amount=3000&bonus=0`       |
-| 5.000 Kz (`618f309f…`)                    | `…/kintu-webhook?secret=…&amount=5000&bonus=1000`    |
-| 10.000 Kz (`087022cb…`)                   | `…/kintu-webhook?secret=…&amount=10000&bonus=2500`   |
-| 15.000 Kz (`5ef7883f…`)                   | `…/kintu-webhook?secret=…&amount=15000&bonus=5000`   |
+| Produto (Kintu) | URL do webhook a configurar |
+|---|---|
+| 3.000 Kz (`9b161c75…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=3000&bonus=0` |
+| 5.000 Kz (`618f309f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=5000&bonus=1000` |
+| 10.000 Kz (`087022cb…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=10000&bonus=2500` |
+| 15.000 Kz (`5ef7883f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=15000&bonus=5000` |
 
 ## Como o lead é identificado
 
@@ -46,7 +46,7 @@ Por ordem de tentativa:
 ## Teste manual
 
 ```bash
-curl -X POST "https://<PROJECT_REF>.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=3000&bonus=0" \
+curl -X POST "https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=3000&bonus=0" \
   -H "Content-Type: application/json" \
   -d '{"transaction_id":"teste-001","phone":"923456789","status":"paid"}'
 ```
@@ -54,6 +54,8 @@ curl -X POST "https://<PROJECT_REF>.supabase.co/functions/v1/kintu-webhook?secre
 Resposta esperada: `{"ok":true, "user_id":"…", "amount":3000, "bonus":0, …}`
 e o saldo do perfil com esse telefone sobe 3.000 Kz. Repetir o mesmo
 `transaction_id` devolve `duplicate` e não credita de novo.
+
+> ✅ Testado a 2026-07-20: crédito de 5.000+1.000 e bloqueio de duplicado a funcionar.
 
 ## Ficheiros
 
