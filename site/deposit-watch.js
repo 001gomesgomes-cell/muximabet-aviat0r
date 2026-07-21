@@ -51,12 +51,6 @@
     setTimeout(function () { t.style.opacity = "0"; setTimeout(function () { t.remove(); }, 400); }, 4200);
   }
 
-  // mostra o aviso de sucesso depois do recarregamento
-  try {
-    var pend = sessionStorage.getItem("mx_deposit_toast");
-    if (pend) { sessionStorage.removeItem("mx_deposit_toast"); setTimeout(function () { toast(pend); }, 800); }
-  } catch (e) {}
-
   var watching = false, baseBal = null, ticks = 0;
 
   setInterval(function () {
@@ -73,12 +67,10 @@
       if (b != null && baseBal != null && b > baseBal) {
         closeCheckout();
         watching = false; baseBal = null;
-        // sincroniza o saldo no cabeçalho e volta ao jogo (sem reabrir a apresentação)
-        try {
-          sessionStorage.setItem("mx_skip_intro", "1");
-          sessionStorage.setItem("mx_deposit_toast", "✓ Depósito recebido! Saldo: " + b.toLocaleString("pt-AO") + " Kz");
-        } catch (e) {}
-        setTimeout(function () { location.reload(); }, 900);
+        // atualiza o saldo no jogo/cabeçalho sem recarregar a página
+        try { window.dispatchEvent(new Event("mx-refresh-balance")); } catch (e) {}
+        setTimeout(function () { try { window.dispatchEvent(new Event("mx-refresh-balance")); } catch (e) {} }, 1500);
+        toast("✓ Depósito recebido! Saldo: " + b.toLocaleString("pt-AO") + " Kz");
       } else if (b != null && baseBal == null) {
         baseBal = b; // caso a base ainda não estivesse pronta
       }
