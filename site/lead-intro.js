@@ -268,6 +268,9 @@
 
   function init() {
     addHelpButton();
+    try {
+      if (sessionStorage.getItem("mx_skip_intro")) { sessionStorage.removeItem("mx_skip_intro"); return; }
+    } catch (e) {}
     showIntro();
   }
 

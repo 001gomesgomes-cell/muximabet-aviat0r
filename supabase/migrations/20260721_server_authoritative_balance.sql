@@ -1,0 +1,8 @@
+-- Saldo autoritativo no servidor (aplicado via MCP no projeto kypohaagiozofdoadvgu).
+-- Resumo: trigger guard_profile_money impede o cliente de alterar o saldo diretamente;
+-- todas as mudancas passam por funcoes SECURITY DEFINER:
+--   credit_deposit (webhook), place_bet, cash_out, lose_bet, request_withdraw.
+-- game_bets regista apostas para validar cashouts (multiplicador limitado a 1000x,
+-- aposta tem de estar aberta e recente < 60s). claim_pending_deposits devolve 0
+-- (compatibilidade com o cliente; os depositos sao creditados diretamente pelo webhook).
+-- Ver o SQL completo no historico de migracoes do projeto Supabase.
