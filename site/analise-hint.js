@@ -46,6 +46,17 @@
     document.body.appendChild(ring);
   }
 
+  // há um modal aberto (cadastro/login/depósito)? — nesse caso escondemos o realce
+  function modalOpen() {
+    var dlgs = document.querySelectorAll('[role="dialog"]');
+    for (var i = 0; i < dlgs.length; i++) {
+      var d = dlgs[i];
+      if (d.getAttribute('data-state') === 'closed') continue;
+      if (d.offsetParent !== null || getComputedStyle(d).display !== 'none') return true;
+    }
+    return false;
+  }
+
   function positionRing(panel) {
     var r = panel.getBoundingClientRect();
     var pad = 6;
@@ -100,8 +111,14 @@
     var panel = findPanel();
     if (!panel) return;
     ensureRing();
+    if (modalOpen()) {
+      // não sobrepor o popup de cadastro/login/depósito
+      ring.style.opacity = '0';
+      if (tip) tip.style.visibility = 'hidden';
+      return;
+    }
     positionRing(panel);
-    if (tipVisible) positionTip(panel);
+    if (tipVisible && tip) { tip.style.visibility = ''; positionTip(panel); }
     if (!balloonShown) { balloonShown = true; showBalloon(panel); }
   }
 
@@ -117,6 +134,16 @@
     setInterval(loop, 600);
     window.addEventListener('scroll', loop, true);
     window.addEventListener('resize', loop);
+    // reage de imediato à abertura/fecho de modais (com throttle)
+    try {
+      var pending = false;
+      var obs = new MutationObserver(function () {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(function () { pending = false; loop(); });
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    } catch (e) {}
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
