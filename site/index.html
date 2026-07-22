@@ -7,6 +7,10 @@
     <meta http-equiv="Expires" content="0" />
     <link rel="icon" type="image/png" href="favicon.png">
 
+    <!-- Elimina o popup "Instalando módulo de previsão" ao abrir o site
+         (pré-define a flag antes do app carregar, igual a já ter sido dispensado) -->
+    <script>try{localStorage.setItem("hackerInstalled","true");}catch(e){}</script>
+
     <!-- Microsoft Clarity -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
