@@ -21,9 +21,9 @@ Assim o crédito é sempre exacto mesmo que a Kintu não envie o ID do produto:
 | Produto (Kintu) | URL do webhook a configurar |
 |---|---|
 | 3.000 Kz (`9b161c75…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=3000&bonus=0` |
-| 5.000 Kz (`618f309f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=5000&bonus=1000` |
-| 10.000 Kz (`087022cb…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=10000&bonus=2500` |
-| 15.000 Kz (`5ef7883f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=15000&bonus=5000` |
+| 5.000 Kz (`618f309f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=5000&bonus=2500` |
+| 10.000 Kz (`087022cb…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=10000&bonus=7500` |
+| 15.000 Kz (`5ef7883f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=15000&bonus=15000` |
 
 ## Como o lead é identificado
 
