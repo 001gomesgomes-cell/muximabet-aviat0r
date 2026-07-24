@@ -13,6 +13,14 @@ Projecto Supabase: **kypohaagiozofdoadvgu** (kibisno.ao@gmail.com)
 https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e
 ```
 
+### Bónus por pacote (forçado no servidor)
+
+> **Nota (2026-07-24):** o bónus é agora definido pela função `public.credit_deposit`
+> no Supabase, com base no **valor** do depósito (3000→0, 5000→2500, 10000→7500,
+> 15000→15000). O `&bonus=` da Kintu é **ignorado** para estes pacotes, por isso não
+> é obrigatório reconfigurar a Kintu — basta o `&amount=` estar correcto. As URLs
+> abaixo já refletem os valores certos na mesma.
+
 ### Recomendado — uma URL por produto (força o pacote e o bónus)
 
 Cola a URL correspondente no campo de webhook/notificação de cada produto na Kintu.

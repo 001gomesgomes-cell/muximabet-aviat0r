@@ -102,7 +102,22 @@ set search_path = public
 as $$
 declare
   v_new_balance numeric;
+  v_bonus numeric;
 begin
+  -- autoriza a alteração de saldo (contexto de servidor; ver guard_profile_money)
+  perform set_config('app.balance_ok', 'on', true);
+
+  -- Bónus definido pelo VALOR do depósito (fonte de verdade no servidor).
+  -- O valor de bónus enviado pela Kintu é ignorado para os pacotes conhecidos,
+  -- por isso não é preciso reconfigurar o &bonus= na Kintu.
+  v_bonus := case
+    when p_amount = 3000  then 0
+    when p_amount = 5000  then 2500
+    when p_amount = 10000 then 7500
+    when p_amount = 15000 then 15000
+    else coalesce(p_bonus, 0)
+  end;
+
   -- idempotência: se este pagamento já foi processado, não credita duas vezes
   if p_external_id is not null
      and exists (select 1 from public.deposits where external_id = p_external_id) then
@@ -110,15 +125,15 @@ begin
   end if;
 
   insert into public.deposits (user_id, amount, payment_method, status, external_id)
-  values (p_user_id, p_amount + p_bonus, p_method, 'completed', p_external_id);
+  values (p_user_id, p_amount + v_bonus, p_method, 'completed', p_external_id);
 
   update public.profiles
-     set balance = balance + p_amount + p_bonus,
+     set balance = balance + p_amount + v_bonus,
          total_deposited = total_deposited + p_amount,
          updated_at = now()
    where user_id = p_user_id
   returning balance into v_new_balance;
 
-  return jsonb_build_object('status', 'credited', 'new_balance', v_new_balance);
+  return jsonb_build_object('status', 'credited', 'new_balance', v_new_balance, 'bonus', v_bonus);
 end;
 $$;
