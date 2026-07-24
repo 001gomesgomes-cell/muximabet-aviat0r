@@ -102,7 +102,7 @@
     { n: 'Ivo L.', t: 'primeira vez que jogo aviator e já tô no lucro, isso é surreal' },
     { n: 'Márcia F.', t: 'saquei <b>50 mil</b> e reinvesti, o sistema tá acertando quase tudo hoje' },
     j('Novatos, não fiquem só a olhar 😄 deposita o valor com bónus e vem comentar. Eu comecei igual a vocês e hoje tô lucrada 💛'),
-    { n: 'André C.', t: 'aproveitem o bónus de hoje, com o de 10 000 recebe 12 500 na hora' },
+    { n: 'André C.', t: 'aproveitem o bónus de hoje, com o de 10 000 recebe 17 500 na hora' },
     { n: 'Osvaldo R.', t: 'fiz depósito de manhã, já dobrei o valor com o sinal 📈' },
     d('Aviator paga MUITO quando segues o Sistema de Análise. Sem sinal não apostes, com sinal verde é lucro 💰'),
     { n: 'Nádia V.', t: 'ganhei <b>124 mil</b> também! esse chat não me deixa mentir 😅🔥' },
@@ -208,7 +208,7 @@
     'Teresa G.', 'André C.', 'Márcia F.', 'Kial J.', 'Osvaldo R.', 'Nádia V.', 'Ana C.',
     'Miguel A.', 'Beatriz T.', 'João S.', 'Kiala J.'
   ];
-  var DEP_VALUES = [3000, 5000, 6000, 10000, 12500, 15000];
+  var DEP_VALUES = [3000, 5000, 10000, 15000];
   var WIT_VALUES = [32000, 45000, 58000, 75000, 92000, 120000, 150000, 210000];
 
   function genMov(avoidName) {
