@@ -5,7 +5,19 @@
 (function () {
   var SUPA_URL = "https://kypohaagiozofdoadvgu.supabase.co";
   var ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cG9oYWFnaW96b2Zkb2Fkdmd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1NzgxMDYsImV4cCI6MjEwMDE1NDEwNn0.OZbRfkN880v02YocGfIicc99PTlfe1x6wOAqdswLpTU";
-  var SESSION_SKIP = "mx_welcome_skip";
+  var JUST_REGISTERED = "mx_just_registered";
+
+  // arma o popup apenas quando o lead SUBMETE o registo (INSCREVER-SE no modal);
+  // um login (ENTRAR) limpa a flag, para o popup não aparecer em logins seguintes.
+  document.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('button[type="submit"]') : null;
+    if (!btn || !btn.closest('[role="dialog"]')) return;
+    var t = (btn.textContent || '').trim().toUpperCase();
+    try {
+      if (t === 'INSCREVER-SE') sessionStorage.setItem(JUST_REGISTERED, '1');
+      else if (t === 'ENTRAR') sessionStorage.removeItem(JUST_REGISTERED);
+    } catch (err) {}
+  }, true);
 
   function accessToken() {
     for (var i = 0; i < localStorage.length; i++) {
@@ -80,7 +92,6 @@
     requestAnimationFrame(function () { ov.classList.add('on'); });
 
     function close() {
-      try { sessionStorage.setItem(SESSION_SKIP, '1'); } catch (e) {}
       ov.classList.remove('on');
       setTimeout(function () { ov.remove(); }, 350);
     }
@@ -100,7 +111,6 @@
             '<h2><span class="mx-wb-ok">+1 000 Kz</span> no teu saldo</h2>' +
             '<p class="mx-wb-sub">Já podes usar o teu bónus para jogar. Boa sorte! 🚀</p>' +
             '<button class="mx-wb-cta" id="mx-wb-done">COMEÇAR A JOGAR</button>';
-          try { sessionStorage.setItem(SESSION_SKIP, '1'); } catch (e) {}
           card.querySelector('#mx-wb-done').addEventListener('click', close);
           setTimeout(function () { refreshBalance(); }, 800);
         } else {
@@ -113,17 +123,19 @@
     });
   }
 
-  /* ---------- deteção ---------- */
-  var checked = false;
+  /* ---------- deteção (só imediatamente após o registo) ---------- */
   setInterval(function () {
     if (document.getElementById('mx-wb-ov')) return;
-    try { if (sessionStorage.getItem(SESSION_SKIP)) return; } catch (e) {}
+    var justReg;
+    try { justReg = sessionStorage.getItem(JUST_REGISTERED); } catch (e) {}
+    if (!justReg) return;               // só aparece se o lead acabou de se registar
     var token = accessToken();
-    if (!token) { checked = false; return; } // deslogado — permite recheck ao logar
-    if (checked) return;
-    checked = true;
+    if (!token) return;                 // ainda a concluir o registo/login
     fetchProfile(token).then(function (p) {
-      if (p && p.welcome_bonus_claimed === false) showPopup(token);
+      if (p && p.welcome_bonus_claimed === false) {
+        try { sessionStorage.removeItem(JUST_REGISTERED); } catch (e) {}
+        showPopup(token);
+      }
     });
-  }, 1500);
+  }, 1200);
 })();
