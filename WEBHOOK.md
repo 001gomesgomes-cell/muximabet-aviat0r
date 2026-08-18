@@ -28,10 +28,11 @@ Assim o crédito é sempre exacto mesmo que a Kintu não envie o ID do produto:
 
 | Produto (Kintu) | URL do webhook a configurar |
 |---|---|
-| 3.000 Kz (`9b161c75…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=3000&bonus=0` |
-| 5.000 Kz (`618f309f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=5000&bonus=2500` |
-| 10.000 Kz (`087022cb…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=10000&bonus=7500` |
-| 15.000 Kz (`5ef7883f…`) | `https://kypohaagiozofdoadvgu.supabase.co/functions/v1/kintu-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e&amount=15000&bonus=15000` |
+| 3.000 Kz | Checkout: `https://pay.kursinha.com/c/6a82ed5eba0c9596c1f15286` |
+| 5.000 Kz | Checkout: `https://pay.kursinha.com/c/6a82ee6aea152779f7098ac5` |
+| 10.000 Kz | Checkout: `https://pay.kursinha.com/c/6a82eeffba0c9596c1f1528a` |
+| 15.000 Kz | Checkout: `https://pay.kursinha.com/c/6a82ef411a12f2ffecb87598` |
+| Taxa de ativação | Checkout: `https://pay.kursinha.com/c/6a82f04cba0c9596c1f1528f` |
 
 ## Como o lead é identificado
 

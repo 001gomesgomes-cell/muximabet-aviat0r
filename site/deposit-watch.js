@@ -26,7 +26,7 @@
   }
 
   function checkoutOpen() {
-    return !!document.querySelector('iframe[src*="kintu.org"], iframe[src*="clickpayon"]');
+    return !!document.querySelector('iframe[src*="kintu.org"], iframe[src*="clickpayon"], iframe[src*="kursinha.com"]');
   }
 
   function closeCheckout() {
