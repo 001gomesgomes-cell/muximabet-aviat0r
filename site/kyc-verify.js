@@ -202,29 +202,26 @@
   /* ═══════════════════════════════════════════════
      STEP 1 — Taxa de ativação não paga
      ═══════════════════════════════════════════════ */
-  function showActivationNeeded() {
+  function showActivationNeeded(balance) {
     var uid = getUserId() || "";
     var link = ACTIVATION_URL + (uid ? "?ref=" + uid : "");
-    fetchProfile().then(function (profile) {
-      var bal = profile ? profile.balance : 0;
-      var box = showOv(
-        '<div class="ke">🛡️</div>' +
-        '<span class="kb">VERIFICAÇÃO DE CONTA</span>' +
-        '<div class="kwarn">' +
-          '<div class="kwarn-t">⚠️ Levantamentos disponíveis apenas para contas verificadas</div>' +
-          '<div class="kwarn-p">Para continuar a jogar e poder levantar os seus ganhos, é necessário verificar a sua conta.</div>' +
-        '</div>' +
-        '<div class="kbal kbal-green"><span>Saldo Disponível</span><span>' + fmtKz(bal) + '</span></div>' +
-        '<div class="kfeats">' +
-          '<div class="kfeat">✅ Verificação única e rápida</div>' +
-          '<div class="kfeat">⏱️ Levantamento processado em até 24h após verificação</div>' +
-          '<div class="kfeat">🔒 Protege a sua conta contra fraudes</div>' +
-        '</div>' +
-        '<a href="' + link + '" target="_blank" rel="noopener" class="ksub-link">🛡️ Verificar Conta ↗</a>' +
-        '<button class="ksec" id="kyc-back" style="margin-top:12px">Voltar ao jogo</button>'
-      );
-      box.querySelector("#kyc-back").addEventListener("click", closeOv);
-    });
+    var box = showOv(
+      '<div class="ke">🛡️</div>' +
+      '<span class="kb">VERIFICAÇÃO DE CONTA</span>' +
+      '<div class="kwarn">' +
+        '<div class="kwarn-t">⚠️ Levantamentos disponíveis apenas para contas verificadas</div>' +
+        '<div class="kwarn-p">Para continuar a jogar e poder levantar os seus ganhos, é necessário verificar a sua conta.</div>' +
+      '</div>' +
+      '<div class="kbal kbal-green"><span>Saldo Disponível</span><span>' + fmtKz(balance) + '</span></div>' +
+      '<div class="kfeats">' +
+        '<div class="kfeat">✅ Verificação única e rápida</div>' +
+        '<div class="kfeat">⏱️ Levantamento processado em até 24h após verificação</div>' +
+        '<div class="kfeat">🔒 Protege a sua conta contra fraudes</div>' +
+      '</div>' +
+      '<a href="' + link + '" target="_blank" rel="noopener" class="ksub-link">🛡️ Verificar Conta ↗</a>' +
+      '<button class="ksec" id="kyc-back" style="margin-top:12px">Voltar ao jogo</button>'
+    );
+    box.querySelector("#kyc-back").addEventListener("click", closeOv);
   }
 
   /* ═══════════════════════════════════════════════
@@ -474,7 +471,7 @@
       var kyc = results[1];
 
       if (!profile || !profile.activated) {
-        showActivationNeeded();
+        showActivationNeeded(profile ? profile.balance : 0);
         return;
       }
 
