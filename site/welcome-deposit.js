@@ -1,9 +1,8 @@
-/* Muxima Bet — intro para visitantes novos.
-   Ao abrir o site pela primeira vez, centra o Sistema de Análise no ecrã com
-   fundo semi-escuro e a pre-sell. Ao clicar "ENTENDI" o painel desaparece e
-   o site fica normal. Só aparece uma vez (flag em localStorage). */
+/* Muxima Bet — intro para visitantes sem sessão.
+   Sempre que a página carrega sem sessão iniciada, centra o Sistema de Análise
+   no ecrã com fundo preto e a pre-sell. Ao clicar "ENTENDI" o painel volta
+   à posição normal. Quando o lead tem sessão activa, não aparece. */
 (function () {
-  var INTRO_SEEN = "mx_intro_seen";
 
   function findPanel() {
     var els = document.querySelectorAll('span,div,button');
@@ -104,23 +103,29 @@
       panel.style.opacity = '';
       ov.classList.remove('on');
       window.mx_intro_active = false;
-      try { localStorage.setItem(INTRO_SEEN, '1'); } catch (e) {}
       setTimeout(function () { ov.remove(); }, 450);
     }
 
     sell.querySelector('.mx-intro-ok').addEventListener('click', dismiss);
   }
 
-  /* ---------- deteção (primeira visita ao site) ---------- */
-  function alreadySeen() {
-    try { return !!localStorage.getItem(INTRO_SEEN); } catch (e) { return true; }
+  /* ---------- deteção (sem sessão iniciada) ---------- */
+  function loggedIn() {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf("kypohaagiozofdoadvgu") !== -1 && k.indexOf("auth-token") !== -1) {
+        try { return !!JSON.parse(localStorage.getItem(k)).access_token; } catch (e) {}
+      }
+    }
+    return false;
   }
 
-  if (!alreadySeen()) {
+  if (!loggedIn()) {
     var tries = 0;
     var wait = setInterval(function () {
       tries++;
       if (document.getElementById('mx-intro-ov')) { clearInterval(wait); return; }
+      if (loggedIn()) { clearInterval(wait); return; }
       if (findPanel()) { clearInterval(wait); showIntro(); }
       else if (tries > 30) { clearInterval(wait); }
     }, 500);
