@@ -23,9 +23,11 @@
 
   /* ---------- estilos ---------- */
   var css = [
-    '#mx-intro-ov{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.65);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;opacity:0;transition:opacity .4s;font-family:Montserrat,Inter,system-ui,sans-serif}',
+    '#mx-intro-ov{position:fixed;inset:0;z-index:100000;background:#000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .4s;font-family:Montserrat,Inter,system-ui,sans-serif}',
     '#mx-intro-ov.on{opacity:1}',
-    '#mx-intro-panel{z-index:100001;display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:14px}',
+    '#mx-intro-box{position:relative;width:100%;max-width:340px;background:linear-gradient(180deg,#1a1a1a,#0D0D0D);border:1px solid rgba(245,192,0,.5);border-radius:20px;box-shadow:0 0 60px rgba(245,192,0,.15),0 24px 60px rgba(0,0,0,.8);padding:24px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;transform:translateY(12px) scale(.96);transition:transform .35s}',
+    '#mx-intro-ov.on #mx-intro-box{transform:none}',
+    '#mx-intro-panel{display:flex;flex-direction:column;align-items:flex-start;gap:4px}',
     '#mx-intro-panel .ip-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px solid rgba(16,185,129,.6);background:linear-gradient(90deg,rgba(16,185,129,.3),rgba(20,78,68,.4));backdrop-filter:blur(16px);box-shadow:0 4px 12px rgba(16,185,129,.2);cursor:default}',
     '#mx-intro-panel .ip-btn span{font-size:10px;font-weight:700;color:#34d399}',
     '#mx-intro-panel .ip-body{width:176px;backdrop-filter:blur(16px);border-radius:8px;border:1px solid rgba(16,185,129,.5);box-shadow:0 10px 25px rgba(0,0,0,.5);overflow:hidden;background:linear-gradient(90deg,rgba(16,185,129,.2),rgba(20,78,68,.3))}',
@@ -38,14 +40,13 @@
     '#mx-intro-panel .ip-status{font-size:9px;font-weight:600;color:#34d399}',
     '#mx-intro-panel .ip-multi{font-size:18px;font-weight:900;color:#f97316;line-height:1.1}',
     '#mx-intro-panel .ip-safe{font-size:8px;color:rgba(52,211,153,.7);margin-top:2px}',
-    '#mx-intro-card{z-index:100001;width:90%;max-width:300px;background:linear-gradient(180deg,#171717,#0D0D0D);border:1px solid rgba(245,192,0,.5);border-radius:14px;box-shadow:0 14px 44px rgba(0,0,0,.7),0 0 30px rgba(245,192,0,.12);padding:14px 16px 16px;text-align:left;opacity:0;transition:opacity .35s .15s}',
-    '#mx-intro-ov.on #mx-intro-card{opacity:1}',
-    '#mx-intro-card .mx-intro-tag{font-size:9px;font-weight:800;letter-spacing:.14em;color:#F5C000;margin-bottom:5px}',
-    '#mx-intro-card b{display:block;font-size:13px;font-weight:900;color:#fff;margin-bottom:4px}',
-    '#mx-intro-card b span{color:#F5C000}',
-    '#mx-intro-card p{margin:0 0 12px;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,.68)}',
-    '#mx-intro-card .mx-intro-ok{width:100%;border:0;cursor:pointer;border-radius:10px;padding:11px 14px;font-family:inherit;font-size:12px;font-weight:900;letter-spacing:.05em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 6px 20px rgba(245,192,0,.35);transition:transform .15s}',
-    '#mx-intro-card .mx-intro-ok:active{transform:scale(.97)}'
+    '#mx-intro-sell{width:100%;text-align:left}',
+    '#mx-intro-sell .mx-intro-tag{font-size:9px;font-weight:800;letter-spacing:.14em;color:#F5C000;margin-bottom:5px}',
+    '#mx-intro-sell b{display:block;font-size:13px;font-weight:900;color:#fff;margin-bottom:4px}',
+    '#mx-intro-sell b span{color:#F5C000}',
+    '#mx-intro-sell p{margin:0 0 14px;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,.68)}',
+    '#mx-intro-sell .mx-intro-ok{width:100%;border:0;cursor:pointer;border-radius:10px;padding:12px 14px;font-family:inherit;font-size:12px;font-weight:900;letter-spacing:.05em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 6px 20px rgba(245,192,0,.35);transition:transform .15s}',
+    '#mx-intro-sell .mx-intro-ok:active{transform:scale(.97)}'
   ].join('\n');
   var style = document.createElement('style');
   style.textContent = css;
@@ -64,6 +65,9 @@
     var SVG_SHIELD = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#34d399"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>';
     var SVG_WARN = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#34d399"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
 
+    var box = document.createElement('div');
+    box.id = 'mx-intro-box';
+
     var fakePanel = document.createElement('div');
     fakePanel.id = 'mx-intro-panel';
     fakePanel.innerHTML =
@@ -78,16 +82,18 @@
           '</div>' +
         '</div>' +
       '</div>';
-    ov.appendChild(fakePanel);
+    box.appendChild(fakePanel);
 
-    var card = document.createElement('div');
-    card.id = 'mx-intro-card';
-    card.innerHTML =
+    var sell = document.createElement('div');
+    sell.id = 'mx-intro-sell';
+    sell.innerHTML =
       '<div class="mx-intro-tag">👆 AQUI</div>' +
       '<b>Sistema de <span>Análise</span> ativo</b>' +
       '<p>Este painel lê as rodadas e mostra o sinal antes de cada jogada. Fica de olho nele.</p>' +
       '<button class="mx-intro-ok" type="button">ENTENDI</button>';
-    ov.appendChild(card);
+    box.appendChild(sell);
+
+    ov.appendChild(box);
     document.body.appendChild(ov);
 
     panel.style.opacity = '0';
@@ -102,7 +108,7 @@
       setTimeout(function () { ov.remove(); }, 450);
     }
 
-    card.querySelector('.mx-intro-ok').addEventListener('click', dismiss);
+    sell.querySelector('.mx-intro-ok').addEventListener('click', dismiss);
   }
 
   /* ---------- deteção (primeira visita ao site) ---------- */
