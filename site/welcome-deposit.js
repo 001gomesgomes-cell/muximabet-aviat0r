@@ -100,10 +100,33 @@
     requestAnimationFrame(function () { ov.classList.add('on'); });
 
     function dismiss() {
-      panel.style.opacity = '';
-      ov.classList.remove('on');
-      window.mx_intro_active = false;
-      setTimeout(function () { ov.remove(); }, 450);
+      sell.style.transition = 'opacity .3s';
+      sell.style.opacity = '0';
+      ov.style.background = 'transparent';
+
+      var fromRect = fakePanel.getBoundingClientRect();
+      var toRect = panel.getBoundingClientRect();
+
+      fakePanel.style.position = 'fixed';
+      fakePanel.style.left = fromRect.left + 'px';
+      fakePanel.style.top = fromRect.top + 'px';
+      fakePanel.style.margin = '0';
+      fakePanel.style.zIndex = '100002';
+      document.body.appendChild(fakePanel);
+      box.remove();
+
+      requestAnimationFrame(function () {
+        fakePanel.style.transition = 'left .7s cubic-bezier(.4,0,.2,1),top .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)';
+        fakePanel.style.left = toRect.left + 'px';
+        fakePanel.style.top = toRect.top + 'px';
+      });
+
+      setTimeout(function () {
+        panel.style.opacity = '';
+        fakePanel.remove();
+        ov.remove();
+        window.mx_intro_active = false;
+      }, 750);
     }
 
     sell.querySelector('.mx-intro-ok').addEventListener('click', dismiss);
