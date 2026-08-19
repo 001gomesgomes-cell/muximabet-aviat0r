@@ -86,8 +86,7 @@
     var sell = document.createElement('div');
     sell.id = 'mx-intro-sell';
     sell.innerHTML =
-      '<div class="mx-intro-tag">👆 AQUI</div>' +
-      '<b>Sistema de <span>Análise</span> ativo</b>' +
+      '<b>Na <span>Muxima Bet</span> o vencedor é você</b>' +
       '<p>Este painel lê as rodadas e mostra o sinal antes de cada jogada. Fica de olho nele.</p>' +
       '<button class="mx-intro-ok" type="button">ENTENDI</button>';
     box.appendChild(sell);
