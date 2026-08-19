@@ -1,98 +1,122 @@
-/* Muxima Bet — aviso pós-registo.
-   Assim que o lead cria a conta, mostra um popup a dar as boas-vindas e a
-   convidá-lo a fazer o primeiro depósito para começar a jogar com o Sistema
-   de Análise. Botão "FAZER DEPÓSITO" abre o modal de depósito. Sem bónus. */
+/* Muxima Bet — intro para visitantes novos.
+   Ao abrir o site pela primeira vez, centra o Sistema de Análise no ecrã com
+   fundo semi-escuro e a pre-sell. Ao clicar "ENTENDI" o painel desaparece e
+   o site fica normal. Só aparece uma vez (flag em localStorage). */
 (function () {
-  var JUST_REGISTERED = "mx_just_registered";
+  var INTRO_SEEN = "mx_intro_seen";
 
-  function loggedIn() {
-    for (var i = 0; i < localStorage.length; i++) {
-      var k = localStorage.key(i);
-      if (k && k.indexOf("kypohaagiozofdoadvgu") !== -1 && k.indexOf("auth-token") !== -1) {
-        try { return !!JSON.parse(localStorage.getItem(k)).access_token; } catch (e) {}
+  function findPanel() {
+    var els = document.querySelectorAll('span,div,button');
+    for (var i = 0; i < els.length; i++) {
+      var t = (els[i].textContent || '').trim();
+      if (t.length < 40 && /sistema de an[aá]lise|an[aá]lise on/i.test(t)) {
+        var n = els[i];
+        while (n && n !== document.body) {
+          if (getComputedStyle(n).position === 'fixed') return n;
+          n = n.parentElement;
+        }
+        return els[i];
       }
     }
-    return false;
-  }
-
-  // arma o popup apenas quando o lead SUBMETE o registo (INSCREVER-SE no modal);
-  // um login (ENTRAR) limpa a flag, para o aviso não aparecer em logins seguintes.
-  document.addEventListener('click', function (e) {
-    var btn = e.target && e.target.closest ? e.target.closest('button[type="submit"]') : null;
-    if (!btn || !btn.closest('[role="dialog"]')) return;
-    var t = (btn.textContent || '').trim().toUpperCase();
-    try {
-      if (t === 'INSCREVER-SE') sessionStorage.setItem(JUST_REGISTERED, '1');
-      else if (t === 'ENTRAR') sessionStorage.removeItem(JUST_REGISTERED);
-    } catch (err) {}
-  }, true);
-
-  function openDeposit() {
-    var btns = document.querySelectorAll('button');
-    for (var i = 0; i < btns.length; i++) {
-      if ((btns[i].textContent || '').trim().toUpperCase() === 'DEPOSITAR') { btns[i].click(); return true; }
-    }
-    return false;
+    return null;
   }
 
   /* ---------- estilos ---------- */
   var css = [
-    '#mx-wd-ov{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .35s;font-family:Montserrat,Inter,system-ui,sans-serif}',
-    '#mx-wd-ov.on{opacity:1}',
-    '#mx-wd{position:relative;width:100%;max-width:390px;text-align:center;background:linear-gradient(180deg,#1a1a1a,#0D0D0D);border:1px solid rgba(245,192,0,.55);border-radius:20px;box-shadow:0 0 70px rgba(245,192,0,.2),0 24px 70px rgba(0,0,0,.8);padding:26px 24px 24px;transform:translateY(14px) scale(.96);transition:transform .35s}',
-    '#mx-wd-ov.on #mx-wd{transform:none}',
-    '#mx-wd .mx-wd-x{position:absolute;top:12px;right:14px;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;font-weight:900;line-height:1;background:none;border:0}',
-    '#mx-wd .mx-wd-x:hover{color:#fff}',
-    '#mx-wd .mx-wd-emoji{font-size:50px;line-height:1;margin-bottom:8px;filter:drop-shadow(0 6px 18px rgba(245,192,0,.45))}',
-    '#mx-wd .mx-wd-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.14em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);border-radius:999px;padding:4px 14px;margin-bottom:12px}',
-    '#mx-wd h2{font-size:20px;font-weight:900;color:#fff;margin:0 0 8px;letter-spacing:.02em}',
-    '#mx-wd h2 span{color:#F5C000}',
-    '#mx-wd .mx-wd-sub{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin:0 0 18px}',
-    '#mx-wd .mx-wd-sub b{color:#F5C000;font-weight:800}',
-    '#mx-wd .mx-wd-cta{width:100%;border:0;cursor:pointer;border-radius:13px;padding:15px 16px;font-family:inherit;font-size:14px;font-weight:900;letter-spacing:.05em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 8px 28px rgba(245,192,0,.4);transition:transform .15s,box-shadow .15s}',
-    '#mx-wd .mx-wd-cta:hover{transform:translateY(-1px);box-shadow:0 12px 34px rgba(245,192,0,.5)}',
-    '#mx-wd .mx-wd-note{margin:11px 0 0;font-size:10.5px;color:rgba(255,255,255,.4)}'
+    '#mx-intro-ov{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.65);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;opacity:0;transition:opacity .4s;font-family:Montserrat,Inter,system-ui,sans-serif}',
+    '#mx-intro-ov.on{opacity:1}',
+    '#mx-intro-panel{z-index:100001;display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:14px}',
+    '#mx-intro-panel .ip-btn{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border:1px solid rgba(16,185,129,.6);background:linear-gradient(90deg,rgba(16,185,129,.3),rgba(20,78,68,.4));backdrop-filter:blur(16px);box-shadow:0 4px 12px rgba(16,185,129,.2);cursor:default}',
+    '#mx-intro-panel .ip-btn span{font-size:10px;font-weight:700;color:#34d399}',
+    '#mx-intro-panel .ip-body{width:176px;backdrop-filter:blur(16px);border-radius:8px;border:1px solid rgba(16,185,129,.5);box-shadow:0 10px 25px rgba(0,0,0,.5);overflow:hidden;background:linear-gradient(90deg,rgba(16,185,129,.2),rgba(20,78,68,.3))}',
+    '#mx-intro-panel .ip-header{display:flex;align-items:center;gap:6px;padding:4px 10px;border-bottom:1px solid rgba(16,185,129,.3);background:rgba(16,185,129,.1)}',
+    '#mx-intro-panel .ip-header span{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#34d399}',
+    '#mx-intro-panel .ip-header .ip-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:#34d399;animation:mxIpPulse 1.5s infinite}',
+    '@keyframes mxIpPulse{0%,100%{opacity:1}50%{opacity:.4}}',
+    '#mx-intro-panel .ip-content{padding:8px 10px;display:flex;align-items:center;gap:8px}',
+    '#mx-intro-panel .ip-info{flex:1}',
+    '#mx-intro-panel .ip-status{font-size:9px;font-weight:600;color:#34d399}',
+    '#mx-intro-panel .ip-multi{font-size:18px;font-weight:900;color:#f97316;line-height:1.1}',
+    '#mx-intro-panel .ip-safe{font-size:8px;color:rgba(52,211,153,.7);margin-top:2px}',
+    '#mx-intro-card{z-index:100001;width:90%;max-width:300px;background:linear-gradient(180deg,#171717,#0D0D0D);border:1px solid rgba(245,192,0,.5);border-radius:14px;box-shadow:0 14px 44px rgba(0,0,0,.7),0 0 30px rgba(245,192,0,.12);padding:14px 16px 16px;text-align:left;opacity:0;transition:opacity .35s .15s}',
+    '#mx-intro-ov.on #mx-intro-card{opacity:1}',
+    '#mx-intro-card .mx-intro-tag{font-size:9px;font-weight:800;letter-spacing:.14em;color:#F5C000;margin-bottom:5px}',
+    '#mx-intro-card b{display:block;font-size:13px;font-weight:900;color:#fff;margin-bottom:4px}',
+    '#mx-intro-card b span{color:#F5C000}',
+    '#mx-intro-card p{margin:0 0 12px;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,.68)}',
+    '#mx-intro-card .mx-intro-ok{width:100%;border:0;cursor:pointer;border-radius:10px;padding:11px 14px;font-family:inherit;font-size:12px;font-weight:900;letter-spacing:.05em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 6px 20px rgba(245,192,0,.35);transition:transform .15s}',
+    '#mx-intro-card .mx-intro-ok:active{transform:scale(.97)}'
   ].join('\n');
   var style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
 
-  function showPopup() {
-    if (document.getElementById('mx-wd-ov')) return;
+  function showIntro() {
+    var panel = findPanel();
+    if (!panel || document.getElementById('mx-intro-ov')) return;
+
+    window.mx_intro_active = true;
+
     var ov = document.createElement('div');
-    ov.id = 'mx-wd-ov';
-    ov.innerHTML =
-      '<div id="mx-wd" role="dialog" aria-modal="true">' +
-        '<button class="mx-wd-x" aria-label="Fechar">&times;</button>' +
-        '<div class="mx-wd-emoji">🚀</div>' +
-        '<span class="mx-wd-badge">CONTA CRIADA</span>' +
-        '<h2>Bem-vindo à <span>Muxima Bet</span>!</h2>' +
-        '<p class="mx-wd-sub">Para começares a jogar com o <b>Sistema de Análise</b>, faz o teu primeiro <b>depósito</b>. Depois é só seguir os sinais e fazer cashout antes do valor previsto.</p>' +
-        '<button class="mx-wd-cta" id="mx-wd-dep">FAZER DEPÓSITO</button>' +
-        '<p class="mx-wd-note">Depósito 100% seguro · o bónus entra na hora.</p>' +
+    ov.id = 'mx-intro-ov';
+
+    var SVG_POWER = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#34d399"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/></svg>';
+    var SVG_SHIELD = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#34d399"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>';
+    var SVG_WARN = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#34d399"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
+
+    var fakePanel = document.createElement('div');
+    fakePanel.id = 'mx-intro-panel';
+    fakePanel.innerHTML =
+      '<div class="ip-btn">' + SVG_POWER + '<span>ANÁLISE ON</span>' + SVG_SHIELD + '</div>' +
+      '<div class="ip-body">' +
+        '<div class="ip-header">' + SVG_SHIELD + '<span>Sistema de Análise</span><div class="ip-dot"></div></div>' +
+        '<div class="ip-content">' + SVG_WARN +
+          '<div class="ip-info">' +
+            '<div class="ip-status">✓ Padrão encontrado!</div>' +
+            '<div class="ip-multi">123.12x</div>' +
+            '<div class="ip-safe">Aposta segura!</div>' +
+          '</div>' +
+        '</div>' +
       '</div>';
+    ov.appendChild(fakePanel);
+
+    var card = document.createElement('div');
+    card.id = 'mx-intro-card';
+    card.innerHTML =
+      '<div class="mx-intro-tag">👆 AQUI</div>' +
+      '<b>Sistema de <span>Análise</span> ativo</b>' +
+      '<p>Este painel lê as rodadas e mostra o sinal antes de cada jogada. Fica de olho nele.</p>' +
+      '<button class="mx-intro-ok" type="button">ENTENDI</button>';
+    ov.appendChild(card);
     document.body.appendChild(ov);
+
+    panel.style.opacity = '0';
+
     requestAnimationFrame(function () { ov.classList.add('on'); });
 
-    function close() {
+    function dismiss() {
+      panel.style.opacity = '';
       ov.classList.remove('on');
-      setTimeout(function () { ov.remove(); }, 350);
+      window.mx_intro_active = false;
+      try { localStorage.setItem(INTRO_SEEN, '1'); } catch (e) {}
+      setTimeout(function () { ov.remove(); }, 450);
     }
-    ov.querySelector('.mx-wd-x').addEventListener('click', close);
-    ov.querySelector('#mx-wd-dep').addEventListener('click', function () {
-      close();
-      setTimeout(openDeposit, 380);
-    });
+
+    card.querySelector('.mx-intro-ok').addEventListener('click', dismiss);
   }
 
-  /* ---------- deteção (só imediatamente após o registo) ---------- */
-  setInterval(function () {
-    if (document.getElementById('mx-wd-ov')) return;
-    var justReg;
-    try { justReg = sessionStorage.getItem(JUST_REGISTERED); } catch (e) {}
-    if (!justReg) return;
-    if (!loggedIn()) return; // ainda a concluir o registo
-    try { sessionStorage.removeItem(JUST_REGISTERED); } catch (e) {}
-    showPopup();
-  }, 1200);
+  /* ---------- deteção (primeira visita ao site) ---------- */
+  function alreadySeen() {
+    try { return !!localStorage.getItem(INTRO_SEEN); } catch (e) { return true; }
+  }
+
+  if (!alreadySeen()) {
+    var tries = 0;
+    var wait = setInterval(function () {
+      tries++;
+      if (document.getElementById('mx-intro-ov')) { clearInterval(wait); return; }
+      if (findPanel()) { clearInterval(wait); showIntro(); }
+      else if (tries > 30) { clearInterval(wait); }
+    }, 500);
+  }
 })();

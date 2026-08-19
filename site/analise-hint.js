@@ -111,15 +111,14 @@
     var panel = findPanel();
     if (!panel) return;
     ensureRing();
-    if (modalOpen()) {
-      // não sobrepor o popup de cadastro/login/depósito
+    if (modalOpen() || window.mx_intro_active) {
       ring.style.opacity = '0';
       if (tip) tip.style.visibility = 'hidden';
       return;
     }
     positionRing(panel);
     if (tipVisible && tip) { tip.style.visibility = ''; positionTip(panel); }
-    if (!balloonShown) { balloonShown = true; showBalloon(panel); }
+    if (!balloonShown && !window.mx_intro_active) { balloonShown = true; showBalloon(panel); }
   }
 
   function init() {
