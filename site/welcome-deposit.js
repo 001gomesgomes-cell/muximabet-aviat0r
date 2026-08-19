@@ -100,6 +100,7 @@
     requestAnimationFrame(function () { ov.classList.add('on'); });
 
     function dismiss() {
+      window.mx_intro_no_balloon = true;
       sell.style.transition = 'opacity .3s';
       sell.style.opacity = '0';
       ov.style.background = 'transparent';
@@ -126,6 +127,7 @@
         fakePanel.remove();
         ov.remove();
         window.mx_intro_active = false;
+        window.mx_intro_no_balloon = true;
       }, 750);
     }
 

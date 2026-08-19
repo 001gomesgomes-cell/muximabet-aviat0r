@@ -117,8 +117,12 @@
       return;
     }
     positionRing(panel);
+    if (window.mx_intro_no_balloon && tip) {
+      tip.style.display = 'none';
+      return;
+    }
     if (tipVisible && tip) { tip.style.visibility = ''; positionTip(panel); }
-    if (!balloonShown && !window.mx_intro_active) { balloonShown = true; showBalloon(panel); }
+    if (!balloonShown && !window.mx_intro_active && !window.mx_intro_no_balloon) { balloonShown = true; showBalloon(panel); }
   }
 
   function init() {
