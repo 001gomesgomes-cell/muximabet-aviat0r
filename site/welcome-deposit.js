@@ -22,7 +22,7 @@
 
   /* ---------- estilos ---------- */
   var css = [
-    '#mx-intro-ov{position:fixed;inset:0;z-index:100000;background:#000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .4s;font-family:Montserrat,Inter,system-ui,sans-serif}',
+    '#mx-intro-ov{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .4s;font-family:Montserrat,Inter,system-ui,sans-serif}',
     '#mx-intro-ov.on{opacity:1}',
     '#mx-intro-box{position:relative;width:100%;max-width:340px;background:linear-gradient(180deg,#1a1a1a,#0D0D0D);border:1px solid rgba(245,192,0,.5);border-radius:20px;box-shadow:0 0 60px rgba(245,192,0,.15),0 24px 60px rgba(0,0,0,.8);padding:24px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:16px;transform:translateY(12px) scale(.96);transition:transform .35s}',
     '#mx-intro-ov.on #mx-intro-box{transform:none}',
