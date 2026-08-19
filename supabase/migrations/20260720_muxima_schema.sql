@@ -87,6 +87,53 @@ create policy "pixel_insert_own" on public.pixel_attribution
 create policy "pixel_update_own" on public.pixel_attribution
   for update using (auth.uid() = user_id);
 
+-- ===== ATIVAÇÃO DE CONTA (taxa de ativação paga via webhook) =====
+-- Coluna no perfil para saber se a taxa de ativação foi paga
+alter table public.profiles add column if not exists activation_paid boolean not null default false;
+
+-- Função chamada pelo webhook activation-webhook quando o lead paga a taxa
+create or replace function public.mark_activation_paid(
+  p_user_id uuid,
+  p_external_id text
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if exists (select 1 from profiles where user_id = p_user_id and activation_paid = true) then
+    return jsonb_build_object('status', 'already_active', 'user_id', p_user_id);
+  end if;
+
+  perform set_config('app.balance_ok', 'on', true);
+
+  update profiles
+     set activation_paid = true,
+         updated_at = now()
+   where user_id = p_user_id;
+
+  return jsonb_build_object('status', 'activated', 'user_id', p_user_id);
+end;
+$$;
+
+-- ===== VERIFICAÇÃO KYC =====
+create table if not exists public.kyc_verifications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null unique references auth.users(id) on delete cascade,
+  full_name text not null,
+  bi_number text not null,
+  date_of_birth date not null,
+  submitted_at timestamptz not null default now()
+);
+
+alter table public.kyc_verifications enable row level security;
+
+create policy "kyc_select_own" on public.kyc_verifications
+  for select using (auth.uid() = user_id);
+create policy "kyc_insert_own" on public.kyc_verifications
+  for insert with check (auth.uid() = user_id);
+
 -- ===== CRÉDITO DE DEPÓSITO (usado pelo webhook, idempotente) =====
 create or replace function public.credit_deposit(
   p_user_id uuid,

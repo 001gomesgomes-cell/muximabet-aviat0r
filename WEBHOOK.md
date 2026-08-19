@@ -66,8 +66,40 @@ e o saldo do perfil com esse telefone sobe 3.000 Kz. Repetir o mesmo
 
 > ✅ Testado a 2026-07-20: crédito de 5.000+1.000 e bloqueio de duplicado a funcionar.
 
+## Webhook da taxa de ativação (Kursinha)
+
+Webhook separado para o produto "Taxa de ativação". Quando o lead paga, marca
+`activation_paid = true` no perfil. Sem isso, o lead não pode avançar para o KYC
+nem fazer levantamentos.
+
+### URL do webhook (colocar no produto de taxa de ativação na Kursinha)
+
+```
+https://kypohaagiozofdoadvgu.supabase.co/functions/v1/activation-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e
+```
+
+Identificação do lead: mesma lógica dos depósitos (`ref` ou telefone).
+Idempotente: chamar duas vezes devolve `already_active`.
+
+### Teste manual
+
+```bash
+curl -X POST "https://kypohaagiozofdoadvgu.supabase.co/functions/v1/activation-webhook?secret=12b764d47c3cbbd1996e4029fea5e7294a9b027ec341580e" \
+  -H "Content-Type: application/json" \
+  -d '{"transaction_id":"act-001","phone":"923456789","status":"paid"}'
+```
+
+## Fluxo de saque (KYC)
+
+1. Lead tenta levantar → vê "Pagar taxa de ativação" (link Kursinha)
+2. Webhook marca `activation_paid = true` → lead preenche KYC (nome, BI, DOB)
+3. Dados submetidos → aguarda 7 dias úteis para aprovação automática
+4. Após 7 dias → formulário de saque: IBAN (21 dígitos) ou Multicaixa Express (9 dígitos)
+
 ## Ficheiros
 
 - Schema da base de dados: `supabase/migrations/20260720_muxima_schema.sql`
-- Função do webhook: `supabase/functions/kintu-webhook/index.ts`
+- Função do webhook de depósitos: `supabase/functions/kintu-webhook/index.ts`
+- Função do webhook de ativação: `supabase/functions/activation-webhook/index.ts`
+- Script KYC + saque (frontend): `site/kyc-verify.js`
   (deploy com `verify_jwt` desativado — a autenticação é feita pelo `secret`)
