@@ -45,7 +45,9 @@
     '#mx-intro-sell b span{color:#F5C000}',
     '#mx-intro-sell p{margin:0 0 14px;font-size:11.5px;line-height:1.55;color:rgba(255,255,255,.68)}',
     '#mx-intro-sell .mx-intro-ok{width:100%;border:0;cursor:pointer;border-radius:10px;padding:12px 14px;font-family:inherit;font-size:12px;font-weight:900;letter-spacing:.05em;color:#0D0D0D;background:linear-gradient(90deg,#F5C000,#ffd84d);box-shadow:0 6px 20px rgba(245,192,0,.35);transition:transform .15s}',
-    '#mx-intro-sell .mx-intro-ok:active{transform:scale(.97)}'
+    '#mx-intro-sell .mx-intro-ok:active{transform:scale(.97)}',
+    '#mx-intro-title{font-size:15px;font-weight:900;color:#fff;text-align:center}',
+    '#mx-intro-title span{color:#F5C000}'
   ].join('\n');
   var style = document.createElement('style');
   style.textContent = css;
@@ -67,6 +69,11 @@
     var box = document.createElement('div');
     box.id = 'mx-intro-box';
 
+    var title = document.createElement('div');
+    title.id = 'mx-intro-title';
+    title.innerHTML = 'Na <span>Muxima Bet</span> o vencedor é você';
+    box.appendChild(title);
+
     var fakePanel = document.createElement('div');
     fakePanel.id = 'mx-intro-panel';
     fakePanel.innerHTML =
@@ -86,7 +93,8 @@
     var sell = document.createElement('div');
     sell.id = 'mx-intro-sell';
     sell.innerHTML =
-      '<b>Na <span>Muxima Bet</span> o vencedor é você</b>' +
+      '<div class="mx-intro-tag">👆 AQUI</div>' +
+      '<b>Sistema de <span>Análise</span> ativo</b>' +
       '<p>Este painel lê as rodadas e mostra o sinal antes de cada jogada. Fica de olho nele.</p>' +
       '<button class="mx-intro-ok" type="button">ENTENDI</button>';
     box.appendChild(sell);
